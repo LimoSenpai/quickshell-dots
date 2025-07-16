@@ -1,0 +1,13 @@
+# Ignore everything
+*
+
+# But don't ignore these directories
+!hypr/
+!quickshell/
+
+# Allow .gitignore itself
+!.gitignore
+
+# Allow nested files in the included directories
+!hypr/**
+!quickshell/**
