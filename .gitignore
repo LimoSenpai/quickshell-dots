@@ -10,5 +10,6 @@
 !.gitignore
 
 # Allow nested files in the included directories
+!rofi/**
 !hypr/**
 !quickshell/**
