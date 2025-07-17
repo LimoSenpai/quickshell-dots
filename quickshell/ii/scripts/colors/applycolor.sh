@@ -57,6 +57,36 @@ apply_qt() {
   python "$CONFIG_DIR/scripts/kvantum/changeAdwColors.py" # apply config colors
 }
 
+generate_rofi_colors() {
+    # Read the generated material colors
+    if [ -f "$STATE_DIR/user/generated/material_colors.scss" ]; then
+        # Extract colors from the SCSS file and convert to rofi format
+        cat > "$STATE_DIR/user/generated/material_colors_rofi.rasi" << EOF
+* {
+    background: $(grep '^\$background:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    surface: $(grep '^\$surface:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    primary: $(grep '^\$primary:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    secondary: $(grep '^\$secondary:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    tertiary: $(grep '^\$tertiary:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    on-surface: $(grep '^\$onSurface:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    on-primary: $(grep '^\$onPrimary:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    on-secondary: $(grep '^\$onSecondary:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    on-tertiary: $(grep '^\$onTertiary:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    surface-container: $(grep '^\$surfaceContainer:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    secondary-container: $(grep '^\$secondaryContainer:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    on-secondary-container: $(grep '^\$onSecondaryContainer:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    on-surface-variant: $(grep '^\$onSurfaceVariant:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    error: $(grep '^\$error:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    error-container: $(grep '^\$errorContainer:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+    on-error-container: $(grep '^\$onErrorContainer:' "$STATE_DIR/user/generated/material_colors.scss" | cut -d: -f2 | tr -d ';' | xargs);
+}
+EOF
+        echo "Generated rofi colors at $STATE_DIR/user/generated/material_colors_rofi.rasi"
+    else
+        echo "Warning: material_colors.scss not found, cannot generate rofi colors"
+    fi
+}
+
 # Check if terminal theming is enabled in config
 CONFIG_FILE="$XDG_CONFIG_HOME/illogical-impulse/config.json"
 if [ -f "$CONFIG_FILE" ]; then
@@ -68,5 +98,7 @@ else
   echo "Config file not found at $CONFIG_FILE. Applying terminal theming by default."
   apply_term &
 fi
+
+generate_rofi_colors &
 
 # apply_qt & # Qt theming is already handled by kde-material-colors

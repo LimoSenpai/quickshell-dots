@@ -2,6 +2,7 @@
 *
 
 # But don't ignore these directories
+!rofi/
 !hypr/
 !quickshell/
 
