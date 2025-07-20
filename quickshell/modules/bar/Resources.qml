@@ -22,6 +22,14 @@ Item {
         anchors.leftMargin: 4
         anchors.rightMargin: 4
 
+
+        Resource {
+            iconName: "mouse"
+            percentage: ResourceUsage.mouseBatteryPercentage
+            shown: ResourceUsage.mouseBatteryPercentage > 0 || root.alwaysShowAllResources
+            Layout.leftMargin: shown ? 4 : 0
+        }
+
         Resource {
             iconName: "memory"
             percentage: ResourceUsage.memoryUsedPercentage

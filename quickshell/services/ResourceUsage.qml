@@ -20,6 +20,7 @@ Singleton {
     property double swapUsedPercentage: swapTotal > 0 ? (swapUsed / swapTotal) : 0
     property double cpuUsage: 0
     property var previousCpuStats
+    property double mouseBatteryPercentage: 0
 
 	Timer {
 		interval: 1
@@ -59,4 +60,33 @@ Singleton {
 
 	FileView { id: fileMeminfo; path: "/proc/meminfo" }
     FileView { id: fileStat; path: "/proc/stat" }
+
+    // Mouse battery monitor
+    Process {
+        id: mouseBatteryProcess
+        command: ["rivalcfg", "--battery-level"]
+        running: true
+        stdout: SplitParser {
+            onRead: data => {
+                // Extract percentage from output like "Discharging [===       ] 35 %"
+                const match = data.match(/(\d+)\s*%/);
+                if (match) {
+                    mouseBatteryPercentage = parseInt(match[1]) / 100.0;
+                }
+            }
+        }
+        onExited: {
+            // Restart after 30 seconds to get updated battery level
+            mouseBatteryTimer.start();
+        }
+    }
+
+    Timer {
+        id: mouseBatteryTimer
+        interval: 30000 // 30 seconds
+        onTriggered: {
+            mouseBatteryProcess.running = false;
+            mouseBatteryProcess.running = true;
+        }
+    }
 }
