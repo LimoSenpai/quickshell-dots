@@ -21,6 +21,7 @@ Singleton {
     property double cpuUsage: 0
     property var previousCpuStats
     property double mouseBatteryPercentage: 0
+    property bool mouseBatteryCharging: false
 
 	Timer {
 		interval: 1
@@ -68,11 +69,19 @@ Singleton {
         running: true
         stdout: SplitParser {
             onRead: data => {
-                // Extract percentage from output like "Discharging [===       ] 35 %"
+                console.log("Mouse battery output:", data); // Debug line
+                
+                // Extract percentage from output like "Discharging [===       ] 35 %" or "Charging [===       ] 35 %"
                 const match = data.match(/(\d+)\s*%/);
                 if (match) {
                     mouseBatteryPercentage = parseInt(match[1]) / 100.0;
                 }
+                
+                // Check if charging - be more specific about the detection
+                const lowerData = data.toLowerCase().trim();
+                mouseBatteryCharging = lowerData.startsWith('charging');
+                
+                console.log("Charging status:", mouseBatteryCharging); // Debug line
             }
         }
         onExited: {
@@ -83,7 +92,7 @@ Singleton {
 
     Timer {
         id: mouseBatteryTimer
-        interval: 30000 // 30 seconds
+        interval: 300 // 30 seconds
         onTriggered: {
             mouseBatteryProcess.running = false;
             mouseBatteryProcess.running = true;

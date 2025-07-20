@@ -24,7 +24,7 @@ Item {
 
 
         Resource {
-            iconName: "mouse"
+            iconName: ResourceUsage.mouseBatteryCharging ? "battery_charging_full" : "mouse"
             percentage: ResourceUsage.mouseBatteryPercentage
             shown: ResourceUsage.mouseBatteryPercentage > 0 || root.alwaysShowAllResources
             Layout.leftMargin: shown ? 4 : 0
