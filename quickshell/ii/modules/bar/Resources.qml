@@ -26,7 +26,7 @@ Item {
             iconName: "memory"
             percentage: ResourceUsage.memoryUsedPercentage
         }
-
+/* 
         Resource {
             iconName: "swap_horiz"
             percentage: ResourceUsage.swapUsedPercentage
@@ -35,7 +35,7 @@ Item {
                 root.alwaysShowAllResources
             Layout.leftMargin: shown ? 4 : 0
         }
-
+ */
         Resource {
             iconName: "settings_slow_motion"
             percentage: ResourceUsage.cpuUsage
