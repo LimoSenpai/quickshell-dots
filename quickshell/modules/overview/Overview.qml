@@ -52,21 +52,6 @@ Scope {
                 }
             }
 
-            Connections {
-                target: GlobalStates
-                function onOverviewOpenChanged() {
-                    if (!GlobalStates.overviewOpen) {
-                        searchWidget.disableExpandAnimation()
-                        overviewScope.dontAutoCancelSearch = false;
-                    } else {
-                        if (!overviewScope.dontAutoCancelSearch) {
-                            searchWidget.cancelSearch()
-                        }
-                        delayedGrabTimer.start()
-                    }
-                }
-            }
-
             Timer {
                 id: delayedGrabTimer
                 interval: Config.options.hacks.arbitraryRaceConditionDelay
@@ -80,10 +65,6 @@ Scope {
             implicitWidth: columnLayout.implicitWidth
             implicitHeight: columnLayout.implicitHeight
 
-            function setSearchingText(text) {
-                searchWidget.setSearchingText(text);
-                searchWidget.focusFirstItemIfNeeded();
-            }
 
             ColumnLayout {
                 id: columnLayout
@@ -108,13 +89,6 @@ Scope {
                     width: 1 // Prevent Wayland protocol error
                 }
 
-                SearchWidget {
-                    id: searchWidget
-                    Layout.alignment: Qt.AlignHCenter
-                    onSearchingTextChanged: (text) => {
-                        root.searchingText = searchingText
-                    }
-                }
 
                 Loader {
                     id: overviewLoader

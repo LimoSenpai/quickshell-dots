@@ -153,7 +153,7 @@ Item {
                             var win = windowByAddress[address]
                             const inWorkspaceGroup = (root.workspaceGroup * root.workspacesShown < win?.workspace?.id && win?.workspace?.id <= (root.workspaceGroup + 1) * root.workspacesShown)
                             const inMonitor = root.monitor.id === win.monitor
-                            return inWorkspaceGroup && inMonitor;
+                            return inWorkspaceGroup;
                         })
                     }
                 }
